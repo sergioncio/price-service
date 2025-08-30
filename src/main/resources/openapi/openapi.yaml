@@ -1,0 +1,69 @@
+openapi: 3.1.0
+info:
+  title: Price Service API
+  version: 1.0.0
+  description: API-first contract for retrieving applicable product prices.
+paths:
+  /prices:
+    get:
+      tags: [prices]
+      summary: Get applicable price
+      description: Returns the applicable price for the given application date, product and brand.
+      operationId: getPrice
+      parameters:
+        - in: query
+          name: applicationDate
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: productId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: brandId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Price found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Price not found
+components:
+  schemas:
+    PriceResponse:
+      type: object
+      required: [productId, brandId, priceList, startDate, endDate, price, curr]
+      properties:
+        productId:
+          type: integer
+          format: int64
+        brandId:
+          type: integer
+          format: int64
+        priceList:
+          type: integer
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        price:
+          type: number
+          format: double
+        curr:
+          type: string
+          minLength: 3
+          maxLength: 3
